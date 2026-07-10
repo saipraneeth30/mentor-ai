@@ -1,29 +1,18 @@
-import os
-
 import discord
 
-from dotenv import load_dotenv
+from bot.config import DISCORD_TOKEN
+from bot.events import register_events
 
-# Load .env file
-load_dotenv()
-
-TOKEN = os.getenv("DISCORD_TOKEN")
-
-# Enable required intents
+# Configure intents
 intents = discord.Intents.default()
 intents.message_content = True
 intents.members = True
 
-# Create bot client
+# Create Discord client
 client = discord.Client(intents=intents)
 
+# Register all events
+register_events(client)
 
-@client.event
-async def on_ready():
-    print("=" * 50)
-    print(f"✅ MentorAI is online!")
-    print(f"Logged in as: {client.user}")
-    print("=" * 50)
-
-
-client.run(TOKEN)
+# Start the bot
+client.run(DISCORD_TOKEN)
