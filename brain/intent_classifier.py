@@ -1,48 +1,62 @@
 from brain.intents import Intent
+from brain.models import IntentResult
 
 
 class IntentClassifier:
 
-    def classify(self, message: str) -> Intent:
+    def classify(self, message: str) -> IntentResult:
 
-        message = message.lower()
+        message = message.lower().strip()
 
-        # Study
         study_keywords = [
             "explain",
             "teach",
+            "learn",
             "what is",
             "understand",
-            "learn",
         ]
 
-        # Quiz
         quiz_keywords = [
             "quiz",
-            "test",
             "mcq",
-            "questions",
+            "test",
+            "question",
         ]
 
-        # Greeting
         greeting_keywords = [
-            "hi",
             "hello",
+            "hi",
+            "hey",
             "good morning",
             "good evening",
-            "hey",
         ]
 
         for keyword in study_keywords:
             if keyword in message:
-                return Intent.STUDY
+                return IntentResult(
+                    intent=Intent.STUDY,
+                    confidence=0.98,
+                    reason=f"Detected study keyword '{keyword}'."
+                )
 
         for keyword in quiz_keywords:
             if keyword in message:
-                return Intent.QUIZ
+                return IntentResult(
+                    intent=Intent.QUIZ,
+                    confidence=0.98,
+                    reason=f"Detected quiz keyword '{keyword}'."
+                )
 
         for keyword in greeting_keywords:
             if keyword in message:
-                return Intent.GENERAL_CHAT
+                return IntentResult(
+                    intent=Intent.GENERAL_CHAT,
+                    confidence=1.0,
+                    reason=f"Detected greeting '{keyword}'."
+                )
 
-        return Intent.UNKNOWN
+        return IntentResult(
+            intent=Intent.UNKNOWN,
+            confidence=0.20,
+            reason="No rule matched. Needs AI classification."
+        )
