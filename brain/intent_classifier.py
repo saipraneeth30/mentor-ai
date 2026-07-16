@@ -1,62 +1,58 @@
 from brain.intents import Intent
 from brain.models import IntentResult
+from ai.intent_ai import AIIntentClassifier
+
+from brain.keywords import (
+    STUDY_KEYWORDS,
+    QUIZ_KEYWORDS,
+    GREETING_KEYWORDS,
+)
 
 
 class IntentClassifier:
+    """
+    Classifies the student's message into an intent.
+
+    Version 1:
+    - Rule-based classification.
+    - Unknown messages will later be classified by Qwen (Hybrid AI).
+    """
+
+    def __init__(self):
+        self.ai_classifier = AIIntentClassifier()
 
     def classify(self, message: str) -> IntentResult:
+        """
+        Analyze the message and return the detected intent.
+        """
 
         message = message.lower().strip()
 
-        study_keywords = [
-            "explain",
-            "teach",
-            "learn",
-            "what is",
-            "understand",
-        ]
-
-        quiz_keywords = [
-            "quiz",
-            "mcq",
-            "test",
-            "question",
-        ]
-
-        greeting_keywords = [
-            "hello",
-            "hi",
-            "hey",
-            "good morning",
-            "good evening",
-        ]
-
-        for keyword in study_keywords:
+        # ---------- Study ----------
+        for keyword in STUDY_KEYWORDS:
             if keyword in message:
                 return IntentResult(
                     intent=Intent.STUDY,
                     confidence=0.98,
-                    reason=f"Detected study keyword '{keyword}'."
+                    reason=f"Detected study keyword: '{keyword}'."
                 )
 
-        for keyword in quiz_keywords:
+        # ---------- Quiz ----------
+        for keyword in QUIZ_KEYWORDS:
             if keyword in message:
                 return IntentResult(
                     intent=Intent.QUIZ,
                     confidence=0.98,
-                    reason=f"Detected quiz keyword '{keyword}'."
+                    reason=f"Detected quiz keyword: '{keyword}'."
                 )
 
-        for keyword in greeting_keywords:
+        # ---------- Greeting ----------
+        for keyword in GREETING_KEYWORDS:
             if keyword in message:
                 return IntentResult(
                     intent=Intent.GENERAL_CHAT,
-                    confidence=1.0,
-                    reason=f"Detected greeting '{keyword}'."
+                    confidence=1.00,
+                    reason=f"Detected greeting keyword: '{keyword}'."
                 )
 
-        return IntentResult(
-            intent=Intent.UNKNOWN,
-            confidence=0.20,
-            reason="No rule matched. Needs AI classification."
-        )
+        return self.ai_classifier.classify(message)

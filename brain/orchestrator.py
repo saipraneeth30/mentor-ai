@@ -1,18 +1,33 @@
 from brain.intent_classifier import IntentClassifier
-from brain.router import Router
+from brain.action_planner import ActionPlanner
+from brain.executor import Executor
 
 
-class MentorBrain:
+class Orchestrator:
+    """
+    Coordinates the complete MentorAI workflow.
+    """
 
     def __init__(self):
-
-        self.classifier = IntentClassifier()
-        self.router = Router()
+        self.intent_classifier = IntentClassifier()
+        self.action_planner = ActionPlanner()
+        self.executor = Executor()
 
     def process(self, message: str):
 
-        intent = self.classifier.classify(message)
+        # Step 1: Detect Intent
+        intent_result = self.intent_classifier.classify(message)
 
-        destination = self.router.route(intent)
+        # Step 2: Decide Action
+        action = self.action_planner.plan(intent_result.intent)
 
-        return intent, destination
+        # Step 3: Execute Action
+        agent = self.executor.execute(action)
+
+        return {
+            "intent": intent_result.intent.value,
+            "confidence": intent_result.confidence,
+            "reason": intent_result.reason,
+            "action": action.value,
+            "agent": agent,
+        }
