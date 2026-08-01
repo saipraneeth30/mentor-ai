@@ -20,3 +20,7 @@ python-dotenv==1.2.2
 typing-inspection==0.4.2
 typing_extensions==4.16.0
 yarl==1.24.2
+fastapi
+uvicorn
+sqlalchemy
+psycopg2-binary

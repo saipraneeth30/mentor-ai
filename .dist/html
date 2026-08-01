@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Marketplace</title>
+</head>
+<body>
+
+    <header>
+        <h1>Marketplace</h1>
+        <nav>
+            <a href="#">Home</a> |
+            <a href="#">Products</a> |
+            <a href="#">Cart</a> |
+            <a href="#">Login</a>
+        </nav>
+    </header>
+
+    <main>
+        <h2>Welcome to Marketplace</h2>
+
+        <div class="product">
+            <img src="https://via.placeholder.com/200" alt="Product">
+            <h3>Product Name</h3>
+            <p>₹999</p>
+            <button>Add to Cart</button>
+        </div>
+
+        <div class="product">
+            <img src="https://via.placeholder.com/200" alt="Product">
+            <h3>Product Name</h3>
+            <p>₹1499</p>
+            <button>Add to Cart</button>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 Marketplace</p>
+    </footer>
+
+</body>
+</html>
