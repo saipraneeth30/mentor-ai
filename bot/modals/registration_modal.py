@@ -1,5 +1,9 @@
 import discord
 
+from bot.services.student_service import StudentService
+from bot.embeds.home import get_home_embed
+from bot.views.home_view import HomeView
+
 
 class RegistrationModal(discord.ui.Modal, title="MentorAI Student Registration"):
 
@@ -26,31 +30,52 @@ class RegistrationModal(discord.ui.Modal, title="MentorAI Student Registration")
 
     preferred_time = discord.ui.TextInput(
         label="🌙 Preferred Study Time",
-        placeholder="Morning / Evening / Night",
+        placeholder="Morning / Afternoon / Evening / Night",
         required=True,
         max_length=50
     )
-    
+
     target_exam_date = discord.ui.TextInput(
-            label="📅 Target Exam Date",
-            placeholder="February 2027",
-            required=True,
-            max_length=50
-        )
+        label="📅 Target Exam Date",
+        placeholder="Example: February 2027",
+        required=True,
+        max_length=50
+    )
 
     async def on_submit(self, interaction: discord.Interaction):
 
-        await interaction.response.send_message(
-            f"""
-✅ Registration Successful!
+        try:
+            student_data = {
+                "goal": self.goal.value,
+                "level": self.level.value,
+                "study_hours": int(self.study_hours.value),
+                "preferred_time": self.preferred_time.value,
+                "target_exam_date": self.target_exam_date.value,
+            }
 
-🎯 Goal: {self.goal.value}
+            response = await StudentService.register_student(student_data)
 
-📚 Level: {self.level.value}
+            embed = get_home_embed(
+                username=interaction.user.display_name,
+                goal=response["student"]["goal"],
+                level=response["student"]["level"]
+            )
 
-⏰ Study Hours: {self.study_hours.value}
+            await interaction.response.send_message(
+                embed=embed,
+                view=HomeView(),
+                ephemeral=True
+            )
 
-🌙 Preferred Time: {self.preferred_time.value}
-""",
-            ephemeral=True
-        )
+        except ValueError:
+            await interaction.response.send_message(
+                "❌ Study Hours must be a valid number.",
+                ephemeral=True
+            )
+
+        except Exception as e:
+            await interaction.response.send_message(
+                f"❌ Registration Failed!\n\n{str(e)}",
+                ephemeral=True
+            )
+            

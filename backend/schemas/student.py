@@ -10,7 +10,11 @@ class StudentRegistration(BaseModel):
         description="Student's learning goal"
     )
 
-    level: Literal["Beginner", "Intermediate", "Advanced"]
+    level: Literal[
+        "Beginner",
+        "Intermediate",
+        "Advanced"
+    ]
 
     study_hours: int = Field(
         ge=1,
@@ -24,3 +28,9 @@ class StudentRegistration(BaseModel):
         "Evening",
         "Night"
     ]
+
+    target_exam_date: str = Field(
+        min_length=3,
+        max_length=50,
+        description="Target exam date"
+    )
