@@ -1,29 +1,29 @@
 import discord
 
 
-class RefreshDashboardButton(discord.ui.Button):
+class RetryQuizButton(discord.ui.Button):
 
     def __init__(self):
 
         super().__init__(
-            label="🔄 Refresh",
+            label="🔄 Retry",
             style=discord.ButtonStyle.primary
         )
 
     async def callback(self, interaction: discord.Interaction):
 
         await interaction.response.send_message(
-            "Dashboard refreshed successfully!",
+            "Use **/quiz** to start another quiz.",
             ephemeral=True
         )
 
 
-class DashboardView(discord.ui.View):
+class QuizResultView(discord.ui.View):
 
-    def __init__(self):
+    def __init__(self, score):
 
         super().__init__(timeout=180)
 
         self.add_item(
-            RefreshDashboardButton()
+            RetryQuizButton()
         )
