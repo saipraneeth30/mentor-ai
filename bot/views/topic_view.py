@@ -1,5 +1,9 @@
 import discord
+
+from bot.services.study_service import StudyService
 from bot.views.difficulty_view import DifficultyView
+
+
 TOPICS = {
     "Data Structures": [
         "Arrays",
@@ -60,34 +64,48 @@ class TopicSelect(discord.ui.Select):
 
         topic = self.values[0]
 
-        embed = discord.Embed(
-            title=f"📘 {topic}",
-            description=(
-                f"**Subject:** {self.subject}\n\n"
-                f"**Topic:** {topic}\n\n"
-                "🚧 Teacher Agent integration will be added in a future sprint."
-            ),
-            color=discord.Color.green()
-        )
+        try:
 
-        embed.add_field(
-            name="🚀 Coming Next",
-            value=(
-                "• Difficulty Selection\n"
-                "• AI Lesson Generation\n"
-                "• Practice Questions\n"
-                "• Quiz"
-            ),
-            inline=False
-        )
+            response = await StudyService.get_topic(
+                self.subject,
+                topic
+            )
 
-        embed.set_footer(
-            text="MentorAI • Study Session"
-        )
+            study = response["study"]
 
-        await interaction.response.edit_message(
-            embed=embed,
-            view=DifficultyView()
+            embed = discord.Embed(
+                title=f"📘 {study['topic']}",
+                description=study["content"],
+                color=discord.Color.green()
+            )
+
+            embed.add_field(
+                name="📚 Subject",
+                value=study["subject"],
+                inline=False
+            )
+
+            embed.add_field(
+                name="🚀 Next Step",
+                value="Choose a difficulty level below.",
+                inline=False
+            )
+
+            embed.set_footer(
+                text="MentorAI • Study Session"
+            )
+
+            await interaction.response.edit_message(
+                embed=embed,
+                view=DifficultyView()
+            )
+
+        except Exception as e:
+
+            await interaction.response.edit_message(
+                content=f"❌ Failed to load study material.\n\n{e}",
+                embed=None,
+                view=None
             )
 
 

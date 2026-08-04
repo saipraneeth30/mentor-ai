@@ -1,5 +1,8 @@
 import discord
 
+from bot.services.quiz_service import QuizService
+from bot.views.quiz_question_view import QuizQuestionView
+
 
 class DifficultySelect(discord.ui.Select):
 
@@ -40,22 +43,65 @@ class DifficultySelect(discord.ui.Select):
 
         difficulty = self.values[0]
 
-        embed = discord.Embed(
-            title="🎯 Quiz Ready",
-            description=(
-                f"**Subject:** {self.subject}\n"
-                f"**Difficulty:** {difficulty}\n\n"
-                "Click **Start Quiz** to begin."
-            ),
-            color=discord.Color.green()
-        )
+        try:
 
-        from bot.views.quiz_question_view import QuizStartView
+            response = await QuizService.start_quiz(
+                self.subject,
+                difficulty
+            )
 
-        await interaction.response.edit_message(
-            embed=embed,
-            view=QuizStartView(self.subject, difficulty)
-        )
+            quiz = response["quiz"]
+
+            question = quiz["questions"][0]
+
+            embed = discord.Embed(
+                title="📝 Question 1",
+                description=question["question"],
+                color=discord.Color.orange()
+            )
+
+            embed.add_field(
+                name="🅰 Option A",
+                value=question["options"][0],
+                inline=False
+            )
+
+            embed.add_field(
+                name="🅱 Option B",
+                value=question["options"][1],
+                inline=False
+            )
+
+            embed.add_field(
+                name="🅲 Option C",
+                value=question["options"][2],
+                inline=False
+            )
+
+            embed.add_field(
+                name="🅳 Option D",
+                value=question["options"][3],
+                inline=False
+            )
+
+            embed.set_footer(
+                text=f"{quiz['subject']} • {quiz['difficulty']}"
+            )
+
+            await interaction.response.edit_message(
+                embed=embed,
+                view=QuizQuestionView(
+                    quiz["questions"]
+                    )
+            )
+
+        except Exception as e:
+
+            await interaction.response.edit_message(
+                content=f"❌ Failed to load quiz.\n\n{e}",
+                embed=None,
+                view=None
+            )
 
 
 class QuizDifficultyView(discord.ui.View):
@@ -64,4 +110,6 @@ class QuizDifficultyView(discord.ui.View):
 
         super().__init__(timeout=180)
 
-        self.add_item(DifficultySelect(subject))
+        self.add_item(
+            DifficultySelect(subject)
+        )

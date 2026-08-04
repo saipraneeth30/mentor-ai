@@ -1,95 +1,138 @@
 import discord
 
-from bot.data.sample_quiz import QUIZ
-from bot.views.quiz_result_view import QuizResultView
+
+class QuizQuestionView(discord.ui.View):
+
+    def __init__(self, questions, question_index=0, score=0):
+
+        super().__init__(timeout=180)
+
+        self.questions = questions
+        self.question_index = question_index
+        self.score = score
+
+        question = questions[question_index]
+
+        options = question["options"]
+
+        self.add_item(
+            AnswerButton(
+                label="A",
+                answer=options[0],
+                correct_answer=question["correct_answer"],
+                questions=questions,
+                question_index=question_index,
+                score=score
+            )
+        )
+
+        self.add_item(
+            AnswerButton(
+                label="B",
+                answer=options[1],
+                correct_answer=question["correct_answer"],
+                questions=questions,
+                question_index=question_index,
+                score=score
+            )
+        )
+
+        self.add_item(
+            AnswerButton(
+                label="C",
+                answer=options[2],
+                correct_answer=question["correct_answer"],
+                questions=questions,
+                question_index=question_index,
+                score=score
+            )
+        )
+
+        self.add_item(
+            AnswerButton(
+                label="D",
+                answer=options[3],
+                correct_answer=question["correct_answer"],
+                questions=questions,
+                question_index=question_index,
+                score=score
+            )
+        )
 
 
 class AnswerButton(discord.ui.Button):
 
-    def __init__(self, label, correct_answer, quiz_view):
+    def __init__(
+        self,
+        label,
+        answer,
+        correct_answer,
+        questions,
+        question_index,
+        score
+    ):
 
         super().__init__(
             label=label,
             style=discord.ButtonStyle.primary
         )
 
+        self.answer = answer
         self.correct_answer = correct_answer
-        self.quiz_view = quiz_view
+        self.questions = questions
+        self.question_index = question_index
+        self.score = score
+
 
     async def callback(self, interaction: discord.Interaction):
 
-        if self.label == self.correct_answer:
-            self.quiz_view.score += 1
+        if self.answer == self.correct_answer:
+            self.score += 1
 
-        embed = discord.Embed(
-            title="🏁 Quiz Finished",
-            description=(
-                f"Your Score: **{self.quiz_view.score}/1**"
-            ),
-            color=discord.Color.green()
-        )
-
-        await interaction.response.edit_message(
-            embed=embed,
-            view=QuizResultView(self.quiz_view.score)
-        )
+        next_index = self.question_index + 1
 
 
-class QuizQuestionView(discord.ui.View):
+        if next_index < len(self.questions):
 
-    def __init__(self, subject):
+            question = self.questions[next_index]
 
-        super().__init__(timeout=300)
 
-        self.score = 0
+            embed = discord.Embed(
+                title=f"📝 Question {next_index + 1}",
+                description=question["question"],
+                color=discord.Color.orange()
+            )
 
-        question = QUIZ[subject][0]
+            for index, option in enumerate(question["options"]):
 
-        for option in question["options"]:
+                embed.add_field(
+                    name=f"Option {chr(65+index)}",
+                    value=option,
+                    inline=False
+                )
 
-            self.add_item(
-                AnswerButton(
-                    option,
-                    question["answer"],
-                    self
+
+            await interaction.response.edit_message(
+                embed=embed,
+                view=QuizQuestionView(
+                    self.questions,
+                    next_index,
+                    self.score
                 )
             )
 
+        else:
 
-class StartQuizButton(discord.ui.Button):
-
-    def __init__(self, subject, difficulty):
-
-        super().__init__(
-            label="▶ Start Quiz",
-            style=discord.ButtonStyle.success
-        )
-
-        self.subject = subject
-        self.difficulty = difficulty
-
-    async def callback(self, interaction: discord.Interaction):
-
-        question = QUIZ[self.subject][0]
-
-        embed = discord.Embed(
-            title=f"📝 {self.subject}",
-            description=question["question"],
-            color=discord.Color.orange()
-        )
-
-        await interaction.response.edit_message(
-            embed=embed,
-            view=QuizQuestionView(self.subject)
-        )
+            embed = discord.Embed(
+                title="🏆 Quiz Completed",
+                description=(
+                    f"Your Score: **{self.score}/{len(self.questions)}**"
+                ),
+                color=discord.Color.gold()
+            )
 
 
-class QuizStartView(discord.ui.View):
-
-    def __init__(self, subject, difficulty):
-
-        super().__init__(timeout=180)
-
-        self.add_item(
-            StartQuizButton(subject, difficulty)
-        )
+            await interaction.response.edit_message(
+                embed=embed,
+                view=None
+            )
