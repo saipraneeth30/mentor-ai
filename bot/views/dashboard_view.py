@@ -1,5 +1,7 @@
 import discord
 
+from bot.components.navigation import NavigationView
+
 
 class RefreshDashboardButton(discord.ui.Button):
 
@@ -18,12 +20,10 @@ class RefreshDashboardButton(discord.ui.Button):
         )
 
 
-class DashboardView(discord.ui.View):
+class DashboardView(NavigationView):
 
     def __init__(self):
 
-        super().__init__(timeout=180)
+        super().__init__()
 
-        self.add_item(
-            RefreshDashboardButton()
-        )
+        self.add_item(RefreshDashboardButton())

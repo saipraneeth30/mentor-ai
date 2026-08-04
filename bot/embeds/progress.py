@@ -1,9 +1,18 @@
 import discord
 
+from bot.embeds.embed_factory import create_embed
 
-def get_progress_embed():
 
-    embed = discord.Embed(
+def get_progress_embed(
+    study_streak: int,
+    study_hours: int,
+    completed_topics: int,
+    quiz_accuracy: int,
+    goal_progress: int,
+    achievement: str
+):
+
+    embed = create_embed(
         title="📈 MentorAI Progress",
         description="Track your complete learning journey.",
         color=discord.Color.gold()
@@ -11,42 +20,38 @@ def get_progress_embed():
 
     embed.add_field(
         name="🔥 Study Streak",
-        value="5 Days",
+        value=f"{study_streak} Days",
         inline=True
     )
 
     embed.add_field(
         name="⏰ Study Hours",
-        value="24 Hours",
+        value=f"{study_hours} Hours",
         inline=True
     )
 
     embed.add_field(
         name="📚 Completed Topics",
-        value="18",
+        value=str(completed_topics),
         inline=True
     )
 
     embed.add_field(
         name="📝 Quiz Accuracy",
-        value="82%",
+        value=f"{quiz_accuracy}%",
         inline=True
     )
 
     embed.add_field(
         name="🎯 Goal Progress",
-        value="34%",
+        value=f"{goal_progress}%",
         inline=True
     )
 
     embed.add_field(
-        name="🏆 Achievements",
-        value="🥇 Consistent Learner",
+        name="🏆 Achievement",
+        value=achievement,
         inline=False
-    )
-
-    embed.set_footer(
-        text="MentorAI • Progress"
     )
 
     return embed

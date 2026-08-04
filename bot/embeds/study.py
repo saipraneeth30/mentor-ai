@@ -1,9 +1,11 @@
 import discord
 
+from bot.embeds.embed_factory import create_embed
+
 
 def get_study_embed():
 
-    embed = discord.Embed(
+    embed = create_embed(
         title="📖 MentorAI Study Center",
         description=(
             "Welcome to your personalized learning center.\n\n"
@@ -22,10 +24,6 @@ def get_study_embed():
             "🤖 Machine Learning"
         ),
         inline=False
-    )
-
-    embed.set_footer(
-        text="MentorAI • Learn one step at a time"
     )
 
     return embed

@@ -18,3 +18,16 @@ class APIClient:
             response.raise_for_status()
 
             return response.json()
+
+    @classmethod
+    async def get(cls, endpoint: str):
+
+        async with httpx.AsyncClient(timeout=10.0) as client:
+
+            response = await client.get(
+                f"{cls.BASE_URL}{endpoint}"
+            )
+
+            response.raise_for_status()
+
+            return response.json()

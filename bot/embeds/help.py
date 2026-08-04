@@ -1,9 +1,11 @@
 import discord
 
+from bot.embeds.embed_factory import create_embed
+
 
 def get_help_embed():
 
-    embed = discord.Embed(
+    embed = create_embed(
         title="❓ MentorAI Help Center",
         description="Available MentorAI commands",
         color=discord.Color.green()
@@ -43,10 +45,6 @@ def get_help_embed():
         name="/settings",
         value="Update your preferences",
         inline=False
-    )
-
-    embed.set_footer(
-        text="MentorAI • Help"
     )
 
     return embed

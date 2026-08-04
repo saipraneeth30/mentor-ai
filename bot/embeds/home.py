@@ -1,12 +1,15 @@
 import discord
 
+from bot.embeds.embed_factory import create_embed
+
 
 def get_home_embed(
     username: str,
     goal: str = "Not Set",
     level: str = "Not Set"
 ):
-    embed = discord.Embed(
+
+    embed = create_embed(
         title="🎓 MentorAI Home",
         description=f"Welcome back, **{username}**!",
         color=discord.Color.blue()
@@ -31,14 +34,10 @@ def get_home_embed(
             "📝 Quiz\n"
             "📊 Progress\n"
             "📅 Dashboard\n"
-            "⚙ Settings\n"
+            "⚙️ Settings\n"
             "❓ Help"
         ),
         inline=False
-    )
-
-    embed.set_footer(
-        text="MentorAI • Your Personal Learning Mentor"
     )
 
     return embed

@@ -1,9 +1,11 @@
 import discord
 
+from bot.embeds.embed_factory import create_embed
+
 
 def get_quiz_embed():
 
-    embed = discord.Embed(
+    embed = create_embed(
         title="📝 MentorAI Quiz Center",
         description=(
             "Test your knowledge with personalized quizzes.\n\n"
@@ -22,10 +24,6 @@ def get_quiz_embed():
             "🤖 Machine Learning"
         ),
         inline=False
-    )
-
-    embed.set_footer(
-        text="MentorAI • Quiz Module"
     )
 
     return embed

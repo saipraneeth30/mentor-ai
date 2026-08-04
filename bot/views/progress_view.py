@@ -1,5 +1,7 @@
 import discord
 
+from bot.components.navigation import NavigationView
+
 
 class RefreshProgressButton(discord.ui.Button):
 
@@ -18,28 +20,9 @@ class RefreshProgressButton(discord.ui.Button):
         )
 
 
-class DashboardButton(discord.ui.Button):
+class ProgressView(NavigationView):
 
     def __init__(self):
 
-        super().__init__(
-            label="📊 Dashboard",
-            style=discord.ButtonStyle.secondary
-        )
-
-    async def callback(self, interaction: discord.Interaction):
-
-        await interaction.response.send_message(
-            "Dashboard navigation will be connected in the next sprint.",
-            ephemeral=True
-        )
-
-
-class ProgressView(discord.ui.View):
-
-    def __init__(self):
-
-        super().__init__(timeout=180)
-
+        super().__init__()
         self.add_item(RefreshProgressButton())
-        self.add_item(DashboardButton())

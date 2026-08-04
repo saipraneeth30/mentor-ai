@@ -1,10 +1,17 @@
-
 import discord
 
+from bot.embeds.embed_factory import create_embed
 
-def get_settings_embed():
 
-    embed = discord.Embed(
+def get_settings_embed(
+    goal: str,
+    level: str,
+    daily_study_hours: int,
+    preferred_study_time: str,
+    target_exam: str
+):
+
+    embed = create_embed(
         title="⚙️ MentorAI Settings",
         description="Manage your study preferences and account settings.",
         color=discord.Color.blurple()
@@ -12,36 +19,32 @@ def get_settings_embed():
 
     embed.add_field(
         name="🎯 Goal",
-        value="GATE CSE 2027",
+        value=goal,
         inline=False
     )
 
     embed.add_field(
         name="📚 Current Level",
-        value="Beginner",
+        value=level,
         inline=True
     )
 
     embed.add_field(
         name="⏰ Daily Study Hours",
-        value="4 Hours",
+        value=f"{daily_study_hours} Hours",
         inline=True
     )
 
     embed.add_field(
         name="🌙 Preferred Study Time",
-        value="Evening",
+        value=preferred_study_time,
         inline=False
     )
 
     embed.add_field(
         name="📅 Target Exam",
-        value="February 2027",
+        value=target_exam,
         inline=False
-    )
-
-    embed.set_footer(
-        text="MentorAI • Settings"
     )
 
     return embed

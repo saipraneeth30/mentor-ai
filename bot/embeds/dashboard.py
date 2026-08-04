@@ -1,9 +1,17 @@
 import discord
 
+from bot.embeds.embed_factory import create_embed
 
-def get_dashboard_embed():
 
-    embed = discord.Embed(
+def get_dashboard_embed(
+    goal: str,
+    study_streak: int,
+    study_hours: int,
+    quiz_accuracy: int,
+    current_subject: str
+):
+
+    embed = create_embed(
         title="📊 MentorAI Dashboard",
         description="Welcome to your personal learning dashboard.",
         color=discord.Color.blue()
@@ -11,36 +19,32 @@ def get_dashboard_embed():
 
     embed.add_field(
         name="🎯 Current Goal",
-        value="GATE CSE 2027",
+        value=goal,
         inline=False
     )
 
     embed.add_field(
         name="🔥 Study Streak",
-        value="5 Days",
+        value=f"{study_streak} Days",
         inline=True
     )
 
     embed.add_field(
         name="⏰ Study Hours",
-        value="20 Hours",
+        value=f"{study_hours} Hours",
         inline=True
     )
 
     embed.add_field(
         name="📝 Quiz Accuracy",
-        value="82%",
+        value=f"{quiz_accuracy}%",
         inline=False
     )
 
     embed.add_field(
         name="📚 Current Subject",
-        value="Data Structures",
+        value=current_subject,
         inline=False
-    )
-
-    embed.set_footer(
-        text="MentorAI • Dashboard"
     )
 
     return embed
