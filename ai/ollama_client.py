@@ -1,14 +1,11 @@
-import ollama
+from ollama import Client
+
+client = Client(host="http://127.0.0.1:11434")
 
 
 def ask_ai(prompt: str) -> str:
-    """
-    Sends a prompt to the local Qwen model
-    and returns the generated response.
-    """
-
-    response = ollama.chat(
-        model="qwen3:8b",
+    response = client.chat(
+        model="qwen3:0.6b",
         messages=[
             {
                 "role": "user",

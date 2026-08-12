@@ -1,20 +1,14 @@
-def get_response(message: str) -> str:
+from brain.orchestrator import Orchestrator
+
+# Create a single orchestrator instance
+orchestrator = Orchestrator()
+
+
+def get_response(user_id: int, message: str):
     """
-    Returns a response based on the user's message.
+    Process the user's message through MentorAI.
     """
 
-    message = message.lower().strip()
+    result = orchestrator.process(user_id, message)
 
-    if message == "hello":
-        return "Hello! 👋 I am MentorAI."
-
-    elif message == "hi":
-        return "Hi! 😊"
-
-    elif "how are you" in message:
-        return "I'm doing great! Ready to help you study. 📚"
-
-    return (
-        "I'm still learning. "
-        "Soon I'll be able to teach you using my AI brain! 🤖"
-    )
+    return result["response"]

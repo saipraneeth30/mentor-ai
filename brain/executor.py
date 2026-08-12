@@ -1,28 +1,55 @@
 from brain.actions import Action
+from brain.contracts.ai_response import AIResponse
+from agents.teacher.teacher_agent import TeacherAgent
+from agents.quiz.quiz_agent import QuizAgent
 
 
 class Executor:
     """
-    Executes the action by selecting
-    the appropriate agent.
-
-    Version 1:
-    Returns the agent name.
-    Later it will execute the real agent.
+    Executes actions using registered AI agents.
     """
 
-    def execute(self, action: Action) -> str:
+    def __init__(self):
 
-        if action == Action.TEACH:
-            return "Teacher Agent"
+        self.agents = {
 
-        elif action == Action.GENERATE_QUIZ:
-            return "Quiz Agent"
+            Action.TEACH: TeacherAgent(),
 
-        elif action == Action.GREET:
-            return "Greeting Handler"
+            Action.GENERATE_QUIZ: QuizAgent(),
 
-        elif action == Action.ASK_AI:
-            return "AI Assistant"
+        }
 
-        return "Unknown Agent"
+    def execute(self, user_id: int, action: Action, message: str):
+
+        # Greeting
+
+        if action == Action.GREET:
+            return AIResponse(
+                response_type="greeting",
+                title="Greeting",
+                content="Hello! 👋 How can I help you today.",
+                metadata={},
+                actions=[],
+                suggestions=[]
+            )
+
+        if action == Action.ASK_AI:
+            return AIResponse(
+                response_type="general",
+                title="AI Assistant",
+                content="General AI Assistant Coming Soon.",
+                metadata={},
+                actions=[],
+                suggestions=[]
+            )
+
+        # Lookup agent
+
+        agent = self.agents.get(action)
+
+        if agent is None:
+            return "Unknown Action."
+
+        # Execute agent
+
+        return agent.handle(message)
